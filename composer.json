@@ -1,6 +1,6 @@
 {
-    "name": "ruflin/elastica",
-    "description": "Elasticsearch Client",
+    "name": "norbertogomez/elastica",
+    "description": "Elasticsearch Client Fork",
     "keywords": ["search","client"],
     "homepage": "http://elastica.io/",
     "type": "library",
@@ -9,6 +9,9 @@
         {
             "name": "Nicolas Ruflin",
             "homepage": "http://ruflin.com/"
+        },
+        {
+            "name": "Norberto Gomez"
         }
     ],
     "require": {
