@@ -45,7 +45,7 @@ class HttpAsync extends AbstractTransport
         $baseUri = $this->_buildBaseUri($request, $connection);
         $command = 'curl';
         $command_params = [];
-        $command_params[] = ' -m ' . $connection->getTimeout();
+        $command_params[] = ' --max-time ' . $connection->getTimeout() . ' --connect-timeout ' . $connection->getTimeout();
         $data = $request->getData();
 
         $headers = $this->_buildHeaders($request);
@@ -65,7 +65,7 @@ class HttpAsync extends AbstractTransport
         }
 
         $command_params_string = implode(' ', $command_params);
-        $curl_command = sprintf('nohup %s %s %s > /dev/null', $command, $command_params_string, $baseUri);
+        $curl_command = sprintf('nohup %s %s %s &> /dev/null', $command, $command_params_string, $baseUri);
 
         exec($curl_command);
         $response = new Response('Done', 200);
