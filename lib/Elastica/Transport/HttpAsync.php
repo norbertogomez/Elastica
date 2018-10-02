@@ -56,6 +56,10 @@ class HttpAsync extends AbstractTransport
 
         if (!empty($data) || '0' === $data) {
             $content = str_replace('\/', '/', $data);
+            /**
+             * The reason of setting this 2 lines below in that format, is that Elasticsearch is expecting
+             * a real new line, so not \n, \n\r or PHP_EOL will work, just real line.
+             */
             $command_params[] = ' --data ' . "'$content
 '";
         }
@@ -109,8 +113,8 @@ class HttpAsync extends AbstractTransport
      */
     protected function _buildHeaders(Request $request): array
     {
-        $headers = [];
-        array_push($headers, sprintf('Content-Type: %s', $request->getContentType()));
-        return $headers;
+        return [
+            sprintf('Content-Type: %s', $request->getContentType()),
+        ];
     }
 }
