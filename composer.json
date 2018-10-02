@@ -1,6 +1,6 @@
 {
     "name": "ruflin/elastica",
-    "description": "Elasticsearch Client",
+    "description": "Elasticsearch Client Fork",
     "keywords": ["search","client"],
     "homepage": "http://elastica.io/",
     "type": "library",
