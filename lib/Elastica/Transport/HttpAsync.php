@@ -1,9 +1,12 @@
 <?php
 namespace Elastica\Transport;
 
-use Elastica\Request;
-use Elastica\Response;
-use Elastica\Util;
+use Elastica\{
+    Connection,
+    Request,
+    Response,
+    Util
+};
 
 /**
  * Elastica HttpAsync Transport object.
@@ -45,8 +48,7 @@ class HttpAsync extends AbstractTransport
         $command_params[] = ' -m ' . $connection->getTimeout();
         $data = $request->getData();
 
-        $headers = [];
-        array_push($headers, sprintf('Content-Type: %s', $request->getContentType()));
+        $headers = $this->_buildHeaders($request);
 
         foreach ($headers as $header) {
             $command_params[] = ' -H ' . '"' . $header . '"';
@@ -58,7 +60,8 @@ class HttpAsync extends AbstractTransport
 '";
         }
 
-        $curl_command = 'nohup ' . $command . implode(' ', $command_params) . ' ' . $baseUri . ' > /dev/null';
+        $command_params_string = implode(' ', $command_params);
+        $curl_command = sprintf('nohup %s %s %s > /dev/null', $command, $command_params_string, $baseUri);
 
         exec($curl_command);
         $response = new Response('Done', 200);
@@ -72,14 +75,12 @@ class HttpAsync extends AbstractTransport
      *
      * @return string
      */
-    protected function _buildBaseUri(Request $request, $connection): string
+    protected function _buildBaseUri(Request $request, Connection $connection): string
     {
-        $url = $connection->hasConfig('url') ? $connection->getConfig('url') : '';
+        $baseUri = $connection->hasConfig('url') ? $connection->getConfig('url') : '';
 
-        if (!empty($url)) {
-            $baseUri = $url;
-        } else {
-            $baseUri = $this->_scheme . '://' . $connection->getHost() . ':' . $connection->getPort() . '/' . $connection->getPath();
+        if (empty($url)) {
+            $baseUri = sprintf('%s://%s:%d/%s', $this->_scheme, $connection->getHost(), $connection->getPort(), $connection->getPath());
         }
 
         $requestPath = $request->getPath();
@@ -99,5 +100,17 @@ class HttpAsync extends AbstractTransport
         }
 
         return $baseUri;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    protected function _buildHeaders(Request $request): array
+    {
+        $headers = [];
+        array_push($headers, sprintf('Content-Type: %s', $request->getContentType()));
+        return $headers;
     }
 }
