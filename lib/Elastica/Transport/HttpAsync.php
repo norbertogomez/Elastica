@@ -65,7 +65,7 @@ class HttpAsync extends AbstractTransport
         }
 
         $command_params_string = implode(' ', $command_params);
-        $curl_command = sprintf('nohup %s %s %s &>/dev/null', $command, $command_params_string, $baseUri);
+        $curl_command = sprintf('nohup %s %s %s >/dev/null 2>&1 &', $command, $command_params_string, $baseUri);
 
         exec($curl_command);
         $response = new Response('Done', 200);
