@@ -56,6 +56,7 @@ class HttpAsync extends AbstractTransport
 
         if (!empty($data) || '0' === $data) {
             $content = str_replace('\/', '/', $data);
+            $content = str_replace("'","'\''", $content);
             /**
              * The reason of setting this 2 lines below in that format, is that Elasticsearch is expecting
              * a real new line, so not \n, \n\r or PHP_EOL will work, just real line.
